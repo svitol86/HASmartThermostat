@@ -546,3 +546,51 @@ async def test_thermal_simulation_climate_closed_loop(hass, freezer, tmp_path):
         writer.writerows(simulation_data)
 
     assert output_path.exists()
+
+
+async def test_recovery_offset_option(hass):
+    """recovery_offset from YAML reaches the PID and a recovery shows in pid_recovery."""
+    hass.states.async_set("sensor.temperature", "18.0")
+    hass.states.async_set("switch.heater_switch", "off")
+    config = {
+        CLIMATE_DOMAIN: {
+            "platform": DOMAIN,
+            "name": "Test Thermostat",
+            "heater": "switch.heater_switch",
+            "target_sensor": "sensor.temperature",
+            "keep_alive": timedelta(seconds=60),
+            "target_temp": 18.0,
+            "recovery_offset": 0.3,
+        }
+    }
+    assert await async_setup_component(hass, CLIMATE_DOMAIN, config)
+    await hass.async_block_till_done()
+    await hass.services.async_call(
+        CLIMATE_DOMAIN, SERVICE_SET_HVAC_MODE,
+        {"entity_id": "climate.test_thermostat", "hvac_mode": HVACMode.HEAT}, blocking=True,
+    )
+    await hass.services.async_call(
+        CLIMATE_DOMAIN, SERVICE_SET_TEMPERATURE,
+        {"entity_id": "climate.test_thermostat", ATTR_TEMPERATURE: 21.0}, blocking=True,
+    )
+    await hass.async_block_till_done()
+    state = hass.states.get("climate.test_thermostat")
+    assert state.attributes.get("pid_recovery") is True
+    assert state.attributes.get("control_output") == 100
+
+
+async def test_recovery_offset_absent_by_default(hass):
+    """Without the option the attribute is not exposed."""
+    hass.states.async_set("sensor.temperature", "18.0")
+    config = {
+        CLIMATE_DOMAIN: {
+            "platform": DOMAIN,
+            "name": "Test Thermostat",
+            "heater": "switch.heater_switch",
+            "target_sensor": "sensor.temperature",
+            "keep_alive": timedelta(seconds=60),
+        }
+    }
+    assert await async_setup_component(hass, CLIMATE_DOMAIN, config)
+    await hass.async_block_till_done()
+    assert "pid_recovery" not in hass.states.get("climate.test_thermostat").attributes
