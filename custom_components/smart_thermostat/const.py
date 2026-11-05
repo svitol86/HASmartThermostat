@@ -33,6 +33,7 @@ DEFAULT_KE = 0
 DEFAULT_AUTOTUNE = "none"
 DEFAULT_NOISEBAND = 0.5
 DEFAULT_OUTPUT_SAFETY = 5.0
+DEFAULT_RECOVERY_OFFSET = 0.0
 DEFAULT_PRESET_SYNC_MODE = "none"
 
 CONF_HEATER = "heater"
@@ -55,6 +56,7 @@ CONF_KEEP_ALIVE = "keep_alive"
 CONF_SAMPLING_PERIOD = "sampling_period"
 CONF_SENSOR_STALL = "sensor_stall"
 CONF_OUTPUT_SAFETY = "output_safety"
+CONF_RECOVERY_OFFSET = "recovery_offset"
 CONF_INITIAL_HVAC_MODE = "initial_hvac_mode"
 CONF_PRESET_SYNC_MODE = "preset_sync_mode"
 CONF_AWAY_TEMP = "away_temp"

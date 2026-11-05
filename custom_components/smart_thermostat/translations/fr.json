@@ -138,6 +138,7 @@
               "min_off_cycle_duration_pid_off": "Durée minimale d'arrêt (PID OFF)",
               "sensor_stall": "Délai de blocage du capteur",
               "output_safety": "Valeur de sécurité de sortie",
+              "recovery_offset": "Bande de récupération de consigne",
               "invert_heater": "Inverser la polarité de l'actionneur",
               "force_off_state": "Forcer l'extinction de l'actionneur quand le thermostat est à OFF",
               "debug": "Mode débogage"
@@ -147,6 +148,7 @@
               "min_off_cycle_duration_pid_off": "Durée minimale d'arrêt lorsque le PID est désactivé.",
               "sensor_stall": "Délai avant de basculer en valeur de sécurité si le capteur ne répond plus.",
               "output_safety": "Pourcentage de sortie appliqué si le capteur est bloqué/hors-ligne.",
+              "recovery_offset": "Après un changement de consigne, maintient la sortie à sa limite et gèle l'intégrale jusqu'à ce que la température soit dans cette bande autour de la nouvelle consigne (0 = désactivé).",
               "invert_heater": "Activez si l'actionneur doit être éteint pour chauffer (ex: relais inversé).",
               "force_off_state": "S'assure que l'actionneur est physiquement éteint lorsque le mode HVAC est OFF.",
               "debug": "Active le mode débogage."
@@ -295,6 +297,7 @@
               "min_off_cycle_duration_pid_off": "Durée minimale d'arrêt (PID OFF)",
               "sensor_stall": "Délai de blocage du capteur",
               "output_safety": "Valeur de sécurité de sortie",
+              "recovery_offset": "Bande de récupération de consigne",
               "invert_heater": "Inverser la polarité de l'actionneur",
               "force_off_state": "Forcer l'extinction de l'actionneur quand le thermostat est à OFF",
               "debug": "Mode débogage"
@@ -304,6 +307,7 @@
               "min_off_cycle_duration_pid_off": "Durée minimale d'arrêt lorsque le PID est désactivé.",
               "sensor_stall": "Délai avant de basculer en valeur de sécurité si le capteur ne répond plus.",
               "output_safety": "Pourcentage de sortie appliqué si le capteur est bloqué/hors-ligne.",
+              "recovery_offset": "Après un changement de consigne, maintient la sortie à sa limite et gèle l'intégrale jusqu'à ce que la température soit dans cette bande autour de la nouvelle consigne (0 = désactivé).",
               "invert_heater": "Activez si l'actionneur doit être éteint pour chauffer (ex: relais inversé).",
               "force_off_state": "S'assure que l'actionneur est physiquement éteint lorsque le mode HVAC est OFF.",
               "debug": "Active le mode débogage."

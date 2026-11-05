@@ -138,6 +138,7 @@
               "min_off_cycle_duration_pid_off": "Mindestausschaltzeit (PID AUS)",
               "sensor_stall": "Sensor-Timeout",
               "output_safety": "Sicherheitsausgangswert",
+              "recovery_offset": "Sollwert-Erholungsband",
               "invert_heater": "Aktorpolarität umkehren",
               "force_off_state": "Aktor erzwingen auszuschalten, wenn Thermostat AUS ist",
               "debug": "Debug-Modus"
@@ -147,6 +148,7 @@
               "min_off_cycle_duration_pid_off": "Mindestdauer der Ausschaltzeit bei deaktiviertem PID.",
               "sensor_stall": "Zeitüberschreitung, bevor auf den Sicherheitswert zurückgegriffen wird, wenn der Sensor keine Updates mehr liefert.",
               "output_safety": "Ausgangsprozentsatz, der angewendet wird, wenn der Sensor blockiert oder nicht verfügbar ist.",
+              "recovery_offset": "Nach einer Sollwertänderung bleibt der Ausgang an seiner Grenze und das Integral eingefroren, bis die Temperatur innerhalb dieses Bandes um den neuen Sollwert liegt (0 = deaktiviert).",
               "invert_heater": "Aktivieren, wenn der Aktor ausgeschaltet werden muss, um zu heizen (z. B. inverses Relais).",
               "force_off_state": "Stellt sicher, dass der Aktor physisch ausgeschaltet wird, wenn der HVAC-Modus AUS ist.",
               "debug": "Debug-Modus aktivieren."
@@ -295,6 +297,7 @@
               "min_off_cycle_duration_pid_off": "Mindestausschaltzeit (PID AUS)",
               "sensor_stall": "Sensor-Timeout",
               "output_safety": "Sicherheitsausgangswert",
+              "recovery_offset": "Sollwert-Erholungsband",
               "invert_heater": "Aktorpolarität umkehren",
               "force_off_state": "Aktor erzwingen auszuschalten, wenn Thermostat AUS ist",
               "debug": "Debug-Modus"
@@ -304,6 +307,7 @@
               "min_off_cycle_duration_pid_off": "Mindestdauer der Ausschaltzeit bei deaktiviertem PID.",
               "sensor_stall": "Zeitüberschreitung, bevor auf den Sicherheitswert zurückgegriffen wird, wenn der Sensor keine Updates mehr liefert.",
               "output_safety": "Ausgangsprozentsatz, der angewendet wird, wenn der Sensor blockiert oder nicht verfügbar ist.",
+              "recovery_offset": "Nach einer Sollwertänderung bleibt der Ausgang an seiner Grenze und das Integral eingefroren, bis die Temperatur innerhalb dieses Bandes um den neuen Sollwert liegt (0 = deaktiviert).",
               "invert_heater": "Aktivieren, wenn der Aktor ausgeschaltet werden muss, um zu heizen (z. B. inverses Relais).",
               "force_off_state": "Stellt sicher, dass der Aktor physisch ausgeschaltet wird, wenn der HVAC-Modus AUS ist.",
               "debug": "Debug-Modus aktivieren."

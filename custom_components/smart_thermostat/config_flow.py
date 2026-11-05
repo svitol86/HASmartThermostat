@@ -194,6 +194,13 @@ ADVANCED_SCHEMA = vol.Schema(
                     vol.Optional(
                         const.CONF_OUTPUT_SAFETY, default=const.DEFAULT_OUTPUT_SAFETY
                     ): NUMBER_SELECTOR,
+                    vol.Optional(
+                        const.CONF_RECOVERY_OFFSET, default=const.DEFAULT_RECOVERY_OFFSET
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=0, max=5, step=0.1, mode=selector.NumberSelectorMode.BOX
+                        )
+                    ),
                     vol.Required(
                         const.CONF_INVERT_HEATER, default=False
                     ): selector.BooleanSelector(),

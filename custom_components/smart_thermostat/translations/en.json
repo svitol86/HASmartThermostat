@@ -98,11 +98,13 @@
           "min_off_cycle_duration": "Minimum Off Cycle Duration",
           "sensor_stall": "Sensor Stall Timeout",
           "output_safety": "Safety Output Level",
+          "recovery_offset": "Set Point Recovery Band",
           "debug": "Debug Mode"
         },
         "data_description": {
           "sensor_stall": "Timeout before falling back to safety level if sensor stops updating.",
-          "output_safety": "Output percentage applied when sensor is stalled or unavailable."
+          "output_safety": "Output percentage applied when sensor is stalled or unavailable.",
+          "recovery_offset": "After a set point change, hold the output at its limit and freeze the integral until the temperature is within this band of the new set point (0 = disabled)."
         }
       }
     }

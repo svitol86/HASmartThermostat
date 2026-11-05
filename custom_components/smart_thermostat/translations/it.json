@@ -138,6 +138,7 @@
               "min_off_cycle_duration_pid_off": "Durata minima arresto (PID OFF)",
               "sensor_stall": "Timeout blocco sensore",
               "output_safety": "Valore di sicurezza di uscita",
+              "recovery_offset": "Banda di recupero setpoint",
               "invert_heater": "Inverti polarità attuatore",
               "force_off_state": "Forza lo spegnimento dell'attuatore quando il termostato è OFF",
               "debug": "Modalità debug"
@@ -147,6 +148,7 @@
               "min_off_cycle_duration_pid_off": "Durata minima dell'arresto quando il PID è disattivato.",
               "sensor_stall": "Tempo d'attesa prima di passare al valore di sicurezza se il sensore smette di aggiornarsi.",
               "output_safety": "Percentuale di uscita applicata quando il sensore è bloccato o non disponibile.",
+              "recovery_offset": "Dopo un cambio di setpoint, mantiene l'uscita al limite e blocca l'integrale finché la temperatura non è entro questa banda dal nuovo setpoint (0 = disattivato).",
               "invert_heater": "Attiva se l'attuatore deve essere spento per riscaldare (es. relè invertito).",
               "force_off_state": "Garantisce che l'attuatore sia spento quando la modalità HVAC è OFF.",
               "debug": "Attiva la modalità di debug."
@@ -295,6 +297,7 @@
               "min_off_cycle_duration_pid_off": "Durata minima arresto (PID OFF)",
               "sensor_stall": "Timeout blocco sensore",
               "output_safety": "Valore di sicurezza di uscita",
+              "recovery_offset": "Banda di recupero setpoint",
               "invert_heater": "Inverti polarità attuatore",
               "force_off_state": "Forza lo spegnimento dell'attuatore quando il termostato è OFF",
               "debug": "Modalità debug"
@@ -304,6 +307,7 @@
               "min_off_cycle_duration_pid_off": "Durata minima dell'arresto quando il PID è disattivato.",
               "sensor_stall": "Tempo d'attesa prima di passare al valore di sicurezza se il sensore smette di aggiornarsi.",
               "output_safety": "Percentuale di uscita applicata quando il sensore è bloccato o non disponibile.",
+              "recovery_offset": "Dopo un cambio di setpoint, mantiene l'uscita al limite e blocca l'integrale finché la temperatura non è entro questa banda dal nuovo setpoint (0 = disattivato).",
               "invert_heater": "Attiva se l'attuatore deve essere spento per riscaldare (es. relè invertito).",
               "force_off_state": "Garantisce che l'attuatore sia spento quando la modalità HVAC è OFF.",
               "debug": "Attiva la modalità di debug."

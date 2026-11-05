@@ -22,6 +22,7 @@ class PID:
             sampling_period=0,
             cold_tolerance=0.3,
             hot_tolerance=0.3,
+            recovery_offset=0.0,
     ):
         """A proportional-integral-derivative controller.
         :param kp: Proportional coefficient.
@@ -42,6 +43,11 @@ class PID:
         :type cold_tolerance: float
         :param hot_tolerance: Temperature threshold tolerance above setpoint when OFF.
         :type hot_tolerance: float
+        :param recovery_offset: Set point recovery band. After a set point change that leaves the input
+            farther than this from the new set point (in the demand direction), the output is held at its
+            limit and the integral is frozen until the input is within the band; then normal PID control
+            resumes. 0 disables it.
+        :type recovery_offset: float
         """
         if kp is None:
             raise ValueError("kp must be specified")
@@ -78,6 +84,10 @@ class PID:
         self._sampling_period = sampling_period
         self._cold_tolerance = cold_tolerance
         self._hot_tolerance = hot_tolerance
+        self._recovery_offset = max(0.0, float(recovery_offset or 0.0))
+        self._recovering = 0  # +1 heating recovery, -1 cooling recovery, 0 normal control
+        self._has_set_point = False
+        self._last_total = 0.0  # last effective output: PID terms + external compensation
 
     @property
     def mode(self):
@@ -137,6 +147,15 @@ class PID:
     def dt(self):
         return self._dt
 
+    @property
+    def recovery_offset(self):
+        return self._recovery_offset
+
+    @property
+    def recovering(self):
+        """True while a set point recovery holds the output at its limit."""
+        return self._recovering != 0
+
     def set_pid_param(self, kp=None, ki=None, kd=None, ke=None):
         """Set PID parameters dynamically."""
         if kp is not None and isinstance(kp, (int, float)):
@@ -156,6 +175,29 @@ class PID:
         self._last_input = None
         self._last_input_time = None
         self._integral = 0.0
+        self._recovering = 0
+        self._has_set_point = False
+        self._last_total = 0.0
+
+    def _update_recovery(self, set_point):
+        """Start or end a set point recovery. Called after the error has been computed."""
+        if self._recovery_offset <= 0:
+            self._recovering = 0
+            return
+        offset = self._recovery_offset
+        # The first computation counts as a set point change, so a recovery resumes after a restart.
+        changed_up = not self._has_set_point or set_point > self._last_set_point
+        changed_down = not self._has_set_point or set_point < self._last_set_point
+        self._has_set_point = True
+        if self._recovering > 0 and (self._error <= offset or set_point < self._last_set_point):
+            self._recovering = 0
+        elif self._recovering < 0 and (self._error >= -offset or set_point > self._last_set_point):
+            self._recovering = 0
+        if not self._recovering:
+            if changed_up and self._error > offset and self._out_max > 0:
+                self._recovering = 1
+            elif changed_down and self._error < -offset and self._out_min < 0:
+                self._recovering = -1
 
     def calc(
             self, input_val, set_point, input_time=None, last_input_time=None, ext_temp=None
@@ -218,14 +260,18 @@ class PID:
         # Feedforward compensation value for external temperature
         self._external = self._Ke * self._dext
 
-        # Anti-windup clamping: only integrate if output is not saturated
-        saturated_high = self._last_output >= self._out_max
-        saturated_low = self._last_output <= self._out_min
+        self._update_recovery(set_point)
+
+        # Anti-windup: only integrate if the effective output (PID terms plus the external
+        # compensation, which the climate entity adds afterwards) is not saturated in the
+        # direction the error pushes, and never during a set point recovery.
+        saturated_high = self._last_total >= self._out_max
+        saturated_low = self._last_total <= self._out_min
         pushing_deeper = (saturated_high and self._error > 0) or (
                 saturated_low and self._error < 0
         )
 
-        if not pushing_deeper and self._dt > 0:
+        if not pushing_deeper and not self._recovering and self._dt > 0:
             self._integral += self._Ki * self._error * self._dt
 
         if self._Ki:
@@ -233,6 +279,16 @@ class PID:
             i_min = self._out_min - self._external
             i_max = self._out_max - self._external
             self._integral = max(min(self._integral, i_max), i_min)
+
+        if self._recovering:
+            # Hold the effective output at its limit; the proportional term absorbs the difference
+            # so that the reported terms still add up to the output.
+            limit = self._out_max if self._recovering > 0 else self._out_min
+            self._derivative = 0.0
+            self._proportional = limit - self._external - self._integral
+            self._output = limit - self._external
+            self._last_total = limit
+            return self._output, True
 
         # Proportional term
         self._proportional = self._Kp * self._error
@@ -245,6 +301,7 @@ class PID:
 
         # Compute raw PID Output (downstream climate component handles final output clamping)
         self._output = self._proportional + self._integral + self._derivative
+        self._last_total = self._output + self._external
         return self._output, True
 
 

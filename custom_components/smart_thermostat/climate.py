@@ -179,6 +179,7 @@ def _build_parameters(hass: HomeAssistant, config: Mapping[str, Any]) -> dict[st
         "sampling_period": normalized.get(const.CONF_SAMPLING_PERIOD),
         "sensor_stall": normalized.get(const.CONF_SENSOR_STALL),
         "output_safety": normalized.get(const.CONF_OUTPUT_SAFETY),
+        "recovery_offset": normalized.get(const.CONF_RECOVERY_OFFSET),
         "initial_hvac_mode": normalized.get(const.CONF_INITIAL_HVAC_MODE),
         "preset_sync_mode": normalized.get(const.CONF_PRESET_SYNC_MODE),
         "away_temp": normalized.get(const.CONF_AWAY_TEMP),
@@ -318,6 +319,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(
             const.CONF_OUTPUT_SAFETY, default=const.DEFAULT_OUTPUT_SAFETY
         ): vol.Coerce(float),
+        vol.Optional(
+            const.CONF_RECOVERY_OFFSET, default=const.DEFAULT_RECOVERY_OFFSET
+        ): vol.All(vol.Coerce(float), vol.Range(min=0, max=5)),
         vol.Optional(const.CONF_INITIAL_HVAC_MODE): vol.In(
             [HVACMode.COOL, HVACMode.HEAT, HVACMode.OFF]
         ),
@@ -418,6 +422,7 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
         self._sampling_period = kwargs.get("sampling_period", timedelta(seconds=0))
         self._sensor_stall = kwargs.get("sensor_stall", timedelta(hours=6)).seconds
         self._output_safety = kwargs.get("output_safety")
+        self._recovery_offset = float(kwargs.get("recovery_offset") or 0.0)
         self._hvac_mode = kwargs.get("initial_hvac_mode", None)
         self._saved_target_temp = kwargs.get("target_temp", None) or kwargs.get(
             "away_temp", None
@@ -540,6 +545,7 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
             self._sampling_period.seconds,
             self._cold_tolerance,
             self._hot_tolerance,
+            self._recovery_offset,
         )
         if self._autotune != "none":
             self._pid_controller.mode = "OFF"
@@ -961,6 +967,10 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
             "pid_mode": self.pid_mode,
             "pid_i": 0 if self._autotune != "none" else self.pid_control_i,
         }
+        if self._recovery_offset > 0:
+            device_state_attributes["pid_recovery"] = (
+                self._autotune == "none" and self._pid_controller.recovering
+            )
         if self._debug:
             device_state_attributes.update(
                 {
@@ -1642,6 +1652,7 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
                         self._sampling_period.seconds,
                         self._cold_tolerance,
                         self._hot_tolerance,
+                        self._recovery_offset,
                     )
                     self._autotune = "none"
             self._pid_output = self._pid_autotune.output

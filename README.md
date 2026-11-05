@@ -444,6 +444,15 @@ gains to quickly test the behavior without waiting the integral to stabilize by 
 * **output_safety** (Optional): Sets the output level of the PID once the thermostat enters safety
   mode due to unresponsive temperature sensor. This can help to keep a minimum temperature in the
   room in case of sensor failure. The value should be a float between 0.0 and 100.0 (default 5.0).
+* **recovery_offset** (Optional): Set point recovery band, in degrees (default 0, disabled). After
+  a set point change that leaves the temperature farther than this band from the new set point (for
+  example the end of a night setback), the output is held at its maximum (minimum when cooling) and
+  the integral is frozen until the temperature is within the band; then normal PID control resumes.
+  On slow systems such as radiators with a large thermal mass, a recovery takes hours: without this
+  option the integral keeps growing during every warm-up, is carried over the setback periods and
+  causes an overshoot at the next arrival. The band also applies after a restart if the temperature
+  is far from the set point. A value around 0.2 to 0.5 °C is a good start. While a recovery is
+  running the `pid_recovery` attribute is `true`.
 * **initial_hvac_mode** (Optional): Forces the operation mode after Home Assistant is restarted. If
   not specified, the thermostat will restore the previous operation mode.
 * **output_precision** (Optional): Sets the precision (number of decimals) of the `control_output`

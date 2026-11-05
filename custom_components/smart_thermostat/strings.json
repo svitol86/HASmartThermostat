@@ -138,6 +138,7 @@
               "min_off_cycle_duration_pid_off": "Minimum Off Cycle Duration (PID OFF)",
               "sensor_stall": "Sensor Stall Timeout",
               "output_safety": "Safety Output Value",
+              "recovery_offset": "Set Point Recovery Band",
               "invert_heater": "Invert Actuator Polarity",
               "force_off_state": "Force Actuator Off When Thermostat is Off",
               "debug": "Debug Mode"
@@ -147,6 +148,7 @@
               "min_off_cycle_duration_pid_off": "Minimum off cycle duration when PID is disabled.",
               "sensor_stall": "Timeout before falling back to safety output value if sensor stops responding.",
               "output_safety": "Output percentage applied if sensor is stalled or offline.",
+              "recovery_offset": "After a set point change, hold the output at its limit and freeze the integral until the temperature is within this band of the new set point (0 = disabled).",
               "invert_heater": "Enable if the actuator must be turned off to heat (e.g., inverted relay).",
               "force_off_state": "Ensures actuator is physically turned off when HVAC mode is OFF.",
               "debug": "Enable debug logging."
@@ -295,6 +297,7 @@
               "min_off_cycle_duration_pid_off": "Minimum Off Cycle Duration (PID OFF)",
               "sensor_stall": "Sensor Stall Timeout",
               "output_safety": "Safety Output Value",
+              "recovery_offset": "Set Point Recovery Band",
               "invert_heater": "Invert Actuator Polarity",
               "force_off_state": "Force Actuator Off When Thermostat is Off",
               "debug": "Debug Mode"
@@ -304,6 +307,7 @@
               "min_off_cycle_duration_pid_off": "Minimum off cycle duration when PID is disabled.",
               "sensor_stall": "Timeout before falling back to safety output value if sensor stops responding.",
               "output_safety": "Output percentage applied if sensor is stalled or offline.",
+              "recovery_offset": "After a set point change, hold the output at its limit and freeze the integral until the temperature is within this band of the new set point (0 = disabled).",
               "invert_heater": "Enable if the actuator must be turned off to heat (e.g., inverted relay).",
               "force_off_state": "Ensures actuator is physically turned off when HVAC mode is OFF.",
               "debug": "Enable debug logging."
